@@ -77,11 +77,31 @@
       font-weight: bold;
       color: #555;
     }
+
+    
   </style>
 </head>
 <body>
 
-  <h1>숫자 뽑기 (Made by 범서) Version 1.1 </h1>
+<div>🔧 강화석: <span id="gem-count">0</span>개</div>
+<button onclick="openShop()">🛒 상점 열기</button>
+
+<!-- 상점 모달 -->
+<div id="shop-modal" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%);
+       background:white; padding:20px; box-shadow:0 0 500px rgba(0,0,0,0.3);
+       max-width:90%; max-height:70vh; overflow-y:auto;">
+  <h2>강화 상점</h2>
+
+  <div id="shop-items">
+    <!-- 희귀도 강화 버튼들이 여기에 들어감 -->
+  </div>
+
+  <button onclick="closeShop()">닫기</button>
+</div>
+
+
+
+  <h1>숫자 뽑기 (Made by 범서) Version 1.51 pre release (alpha) </h1>
   <div id="money">💰 소지금: 0원</div>
   <button onclick="earnMoney()">💸 1원 벌기</button>
   <button onclick="drawNumber()"> 숫자 뽑기 (100원)</button>
@@ -110,7 +130,7 @@
   </div>
 
   <script>
-    let money = 150;
+    let money = 1500000;
     let inventory = [];
     let showcase = null;
     let collection = {};
@@ -145,6 +165,12 @@
       { name: "등차수열", combo: [35, 46, 57] },
     ];
 
+    let gems = 0; // 강화석 개수
+const upgradeLevels = {
+  Common: 0, Rare: 0, SuperRare: 0, Epic: 0, Mythic: 0, Legendary: 0, Special: 0
+};
+
+
     const numberPool = [];
     const rarityChances = [
       { rarity: 'Common', chance: 0.6 },
@@ -173,6 +199,10 @@
     }
 
     const rarityLevels = ['Common', 'Rare', 'SuperRare', 'Epic', 'Mythic', 'Legendary', 'Special'];
+const upgradeIncrements = {
+  Common:30, Rare:40, SuperRare:50, Epic:60, Mythic:70, Legendary:80, Special:90
+};
+const upgradeBaseCost = 3000;
 
     // 전시 숫자 희귀도별 초당 수익
     const incomeMap = {
@@ -218,6 +248,63 @@
       renderCollection();
       renderInventory();
     }
+
+    function openShop() {
+  renderShopItems();
+  document.getElementById('shop-modal').style.display = 'block';
+}
+function closeShop() {
+  document.getElementById('shop-modal').style.display = 'none';
+}
+
+const rarityOrder = ['Common', 'Rare', 'SuperRare', 'Epic', 'Mythic', 'Legendary', 'Special'];
+
+function renderShopItems() {
+  const container = document.getElementById('shop-items');
+  container.innerHTML = '';
+  Object.keys(upgradeLevels).forEach(rarity => {
+    const level = upgradeLevels[rarity];
+    if (level >= 3) return; // 최대 3성
+    
+    const idx = rarityOrder.indexOf(rarity);
+    if (idx === -1) return;
+    
+    const requiredGems = idx + 1;
+    
+    const btn = `<button onclick="buyUpgrade('${rarity}')">강화 +1⭐ (레벨${level} → ${level+1}) - ${upgradeBaseCost}원 & ${requiredGems}개</button>`;
+    const stars = '⭐'.repeat(level);
+    container.innerHTML += `<div>${rarity} ${stars}<br>증가량: +${upgradeIncrements[rarity]}/회<br>${btn}</div><hr>`;
+  });
+}
+
+function buyUpgrade(rarity) {
+  const level = upgradeLevels[rarity];
+  if (level >= 3) { alert('최대 레벨입니다!'); return; }
+  
+  const idx = rarityOrder.indexOf(rarity);
+  if (idx === -1) {
+    alert('알 수 없는 희귀도입니다!');
+    return;
+  }
+  
+  const requiredGems = idx + 1;
+  
+  if (money < upgradeBaseCost || gems < requiredGems) {
+    alert('돈 또는 강화석이 부족합니다!');
+    return;
+  }
+  
+  money -= upgradeBaseCost;
+  gems -= requiredGems;
+  upgradeLevels[rarity]++;
+  updateMoney();
+  document.getElementById('gem-count').textContent = gems;
+  renderShopItems();
+}
+
+
+
+
 
     function checkSpecialCombinations() {
       const allNumbers = [...inventory.map(i => i.num), showcase?.num].filter(n => n !== undefined);
@@ -303,7 +390,12 @@
           case 'Epic': price = 20; break;
           case 'Mythic': price = 50; break;
           case 'Legendary': price = 100; break;
-          case 'Special': price = 200; break;
+         case 'Special':
+  price = 200;
+  gems += 1; // 강화석 1개 추가
+  document.getElementById('gem-count').textContent = gems;
+  break;
+
         }
         money += price;
         inventory.splice(index, 1);
@@ -335,7 +427,10 @@
       if (!showcase) return;
       incomeInterval = setInterval(() => {
         const rarity = showcase.rarity;
-        const income = incomeMap[rarity] || 0;
+        const base = incomeMap[rarity] || 0;
+const inc = upgradeIncrements[rarity] * upgradeLevels[rarity];
+const income = base + inc;
+
         money += income;
         updateMoney();
       }, 2000);
@@ -419,10 +514,7 @@ document.querySelector('button[onclick="drawNumber()"]').onclick = drawNumberWit
             // 조합 결과 숫자 생성
             const combinedNum = Number(combo.combo.join(''));
 
-            // 중복 방지 및 추가
-            if (!collection[combinedNum]) {
-              collection[combinedNum] = 'Special';
-            }
+
 
             // 인벤토리에 조합 숫자 추가
             inventory.push({ num: combinedNum, rarity: 'Special' });
@@ -475,6 +567,7 @@ document.querySelector('button[onclick="drawNumber()"]').onclick = drawNumberWit
     });
   };    
 
+  
   
   </script>
 </body>
