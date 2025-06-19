@@ -36,7 +36,7 @@
       width: 150px;
       height: 150px;
       font-size: 48px;
-      font-family: 'Georgia', serif;
+      font-family: 'Noto-Sans', serif;
       border-radius: 15px;
       display: flex;
       align-items: center;
@@ -94,7 +94,7 @@
 </head>
 <body>
 
-<div>🔧 강화석: <span id="gem-count">0</span>개</div>
+<div>🪨 강화석: <span id="gem-count">0</span>개</div>
 <button onclick="openShop()">🛒 상점 열기</button>
 
 <!-- 상점 모달 -->
@@ -110,17 +110,17 @@
   <button onclick="closeShop()">닫기</button>
 </div>
 
-  <button onclick="openSpecialShop()">🌌 특별상점 열기</button>
+  <button onclick="openSpecialShop()">💫 특별상점 열기</button>
   <div id="special-shop-modal" style="display:none; position:fixed; top:25%; left:50%; transform:translateX(-50%);
        background:white; padding:20px; box-shadow:0 0 500px rgba(0,0,0,0.3);
        max-width:90%; max-height:60vh; overflow-y:auto;">
-  <h2>🌌 특별상점</h2>
+  <h2>💫 특별상점</h2>
   <p>특별한 숫자 <strong>0</strong>을 <strong>10,000원</strong>에 구매할 수 있습니다.</p>
   <button onclick="buySpecialNumber()">✨ 숫자 "0" 구매</button>
   <button onclick="closeSpecialShop()">닫기</button>
 </div>
 
-  <h1>숫자 뽑기 (Made by 범서) Version 1.51 pre release (Beta) </h1>
+  <h1>숫자 뽑기 (Made by 범서) Version 1.51 release (Alpha&Beta) </h1>
   <div id="money">💰 소지금: 0원</div>
   <button onclick="earnMoney()">💸 1원 벌기</button>
   <button onclick="drawNumber()"> 숫자 뽑기 (100원)</button>
