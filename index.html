@@ -78,6 +78,17 @@
       color: #555;
     }
 
+    .Event {
+  background: linear-gradient(135deg, black, purple);
+  animation: glowEvent 1s infinite alternate;
+}
+
+@keyframes glowEvent {
+  from { box-shadow: 0 0 10px purple; }
+  to { box-shadow: 0 0 25px black; }
+}
+
+
     
   </style>
 </head>
@@ -99,9 +110,17 @@
   <button onclick="closeShop()">닫기</button>
 </div>
 
+  <button onclick="openSpecialShop()">🌌 특별상점 열기</button>
+  <div id="special-shop-modal" style="display:none; position:fixed; top:25%; left:50%; transform:translateX(-50%);
+       background:white; padding:20px; box-shadow:0 0 500px rgba(0,0,0,0.3);
+       max-width:90%; max-height:60vh; overflow-y:auto;">
+  <h2>🌌 특별상점</h2>
+  <p>특별한 숫자 <strong>0</strong>을 <strong>10,000원</strong>에 구매할 수 있습니다.</p>
+  <button onclick="buySpecialNumber()">✨ 숫자 "0" 구매</button>
+  <button onclick="closeSpecialShop()">닫기</button>
+</div>
 
-
-  <h1>숫자 뽑기 (Made by 범서) Version 1.51 pre release (alpha) </h1>
+  <h1>숫자 뽑기 (Made by 범서) Version 1.51 pre release (Beta) </h1>
   <div id="money">💰 소지금: 0원</div>
   <button onclick="earnMoney()">💸 1원 벌기</button>
   <button onclick="drawNumber()"> 숫자 뽑기 (100원)</button>
@@ -123,6 +142,7 @@
       <button onclick="toggleCollection()">더보기</button>
     </div>
   </div>
+
 
   <div id="recipe">
     <h2>🧩 조합 레시피</h2>
@@ -163,11 +183,14 @@
          { name: "범서생일", combo: [12, 20] },
           { name: "3장 6구 45자 내외", combo: [36, 45] },
       { name: "등차수열", combo: [35, 46, 57] },
+      { name: "2030청년들 화이팅!", combo: [20, 30] },
+      { name: "어질어질", combo: [27, 57] },
+
     ];
 
     let gems = 0; // 강화석 개수
 const upgradeLevels = {
-  Common: 0, Rare: 0, SuperRare: 0, Epic: 0, Mythic: 0, Legendary: 0, Special: 0
+  Common: 0, Rare: 0, SuperRare: 0, Epic: 0, Mythic: 0, Legendary: 0, Special: 0 , Event: 0
 };
 
 
@@ -200,7 +223,7 @@ const upgradeLevels = {
 
     const rarityLevels = ['Common', 'Rare', 'SuperRare', 'Epic', 'Mythic', 'Legendary', 'Special'];
 const upgradeIncrements = {
-  Common:30, Rare:40, SuperRare:50, Epic:60, Mythic:70, Legendary:80, Special:90
+  Common:30, Rare:40, SuperRare:50, Epic:60, Mythic:70, Legendary:80, Special:90, Event:200
 };
 const upgradeBaseCost = 3000;
 
@@ -212,7 +235,8 @@ const upgradeBaseCost = 3000;
       Epic: 10,
       Mythic: 15,
       Legendary: 30,
-      Special: 40
+      Special: 40,
+      Event: 100
     };
 
     function earnMoney() {
@@ -248,6 +272,34 @@ const upgradeBaseCost = 3000;
       renderCollection();
       renderInventory();
     }
+
+    function buySpecialNumber() {
+  if (money < 10000) {
+    alert("돈이 부족합니다!");
+    return;
+  }
+  if (inventory.length >= 3) {
+    alert("인벤토리가 가득 찼습니다!");
+    return;
+  }
+
+  money -= 10000;
+  updateMoney();
+
+  const specialNum = { num: 0, rarity: "Event" };
+  inventory.push(specialNum);
+  collection[0] = "Event";
+  renderInventory();
+  renderCollection();
+}
+
+
+      function openSpecialShop() {
+  document.getElementById('special-shop-modal').style.display = 'block';
+}
+function closeSpecialShop() {
+  document.getElementById('special-shop-modal').style.display = 'none';
+}
 
     function openShop() {
   renderShopItems();
@@ -293,6 +345,9 @@ function buyUpgrade(rarity) {
     alert('돈 또는 강화석이 부족합니다!');
     return;
   }
+
+
+
   
   money -= upgradeBaseCost;
   gems -= requiredGems;
