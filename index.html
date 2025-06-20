@@ -45,7 +45,7 @@
       transition: transform 0.3s ease;
     }
 
-    #collection-container { max-height: 500px; overflow: hidden; transition: max-height 0.5s ease; }
+    #collection-container { max-height: 500px; overflow: hidden; transition: max-height 2s ease; }
 
     #collection-container.expanded { max-height: 1000px; }
 
@@ -79,13 +79,13 @@
     }
 
     .Event {
-  background: linear-gradient(135deg, black, purple);
+  background: linear-gradient(135deg, rgb(255, 255, 255), rgb(255, 0, 200));
   animation: glowEvent 1s infinite alternate;
 }
 
 @keyframes glowEvent {
-  from { box-shadow: 0 0 10px purple; }
-  to { box-shadow: 0 0 25px black; }
+  from { box-shadow: 0 0 10px rgb(255, 74, 255); }
+  to { box-shadow: 0 0 25px rgb(226, 148, 209); }
 }
 
 
@@ -94,7 +94,7 @@
 </head>
 <body>
 
-<div>🪨 강화석: <span id="gem-count">0</span>개</div>
+<div>🔧 강화석: <span id="gem-count">0</span>개</div>
 <button onclick="openShop()">🛒 상점 열기</button>
 
 <!-- 상점 모달 -->
@@ -110,17 +110,17 @@
   <button onclick="closeShop()">닫기</button>
 </div>
 
-  <button onclick="openSpecialShop()">💫 특별상점 열기</button>
+  <button onclick="openSpecialShop()">🌌 특별상점 열기</button>
   <div id="special-shop-modal" style="display:none; position:fixed; top:25%; left:50%; transform:translateX(-50%);
        background:white; padding:20px; box-shadow:0 0 500px rgba(0,0,0,0.3);
        max-width:90%; max-height:60vh; overflow-y:auto;">
-  <h2>💫 특별상점</h2>
+  <h2>🌌 특별상점</h2>
   <p>특별한 숫자 <strong>0</strong>을 <strong>10,000원</strong>에 구매할 수 있습니다.</p>
   <button onclick="buySpecialNumber()">✨ 숫자 "0" 구매</button>
   <button onclick="closeSpecialShop()">닫기</button>
 </div>
 
-  <h1>숫자 뽑기 (Made by 범서) Version 1.51 release (Alpha&Beta) </h1>
+  <h1>숫자 뽑기 (Made by 범서) Version 1.51 pre release (Beta) </h1>
   <div id="money">💰 소지금: 0원</div>
   <button onclick="earnMoney()">💸 1원 벌기</button>
   <button onclick="drawNumber()"> 숫자 뽑기 (100원)</button>
@@ -143,11 +143,12 @@
     </div>
   </div>
 
-
   <div id="recipe">
     <h2>🧩 조합 레시피</h2>
     <ul id="recipe-list"></ul>
   </div>
+
+  
 
   <script>
     let money = 150;
@@ -177,12 +178,12 @@
       { name: "둘이서", combo: [2, 23] },
       { name: "황금비율", combo: [16, 18] },
       { name: "이상한 나라", combo: [42, 24] },
-      { name: "할인 가격", combo: [19, 99 ,90] },
+      { name: "그냥 아무숫자", combo: [42, 78 ,94] },
        { name: "1024 라이프", combo: [10, 24] },
         { name: "오징어게임", combo: [45, 60] },
          { name: "범서생일", combo: [12, 20] },
           { name: "3장 6구 45자 내외", combo: [36, 45] },
-      { name: "등차수열", combo: [35, 44, 53] },
+      { name: "등차수열", combo: [35, 46, 57] },
       { name: "2030청년들 화이팅!", combo: [20, 30] },
       { name: "어질어질", combo: [27, 57] },
 
